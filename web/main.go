@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/gin-gonic/gin"
 	"go-micro.dev/v5"
+	"golang.org/x/crypto/bcrypt"
 
 	commentProto "github.com/micro/blog/comments/proto"
 	postProto "github.com/micro/blog/posts/proto"
@@ -203,6 +203,7 @@ func main() {
 			Email    string `json:"email"`
 			Password string `json:"password"`
 		}
+
 		if err := c.BindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -249,6 +250,7 @@ func main() {
 			return
 		}
 		var found *userProto.User
+
 		for _, u := range usersResp.Users {
 			if u.Email == req.Email {
 				found = u

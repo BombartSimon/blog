@@ -3,9 +3,9 @@ function timeAgo(ts) {
   const now = Date.now() / 1000;
   const diff = Math.floor(now - ts);
   if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
-  if (diff < 2592000) return `${Math.floor(diff/86400)}d ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 2592000) return `${Math.floor(diff / 86400)}d ago`;
   const d = new Date(ts * 1000);
   return d.toLocaleDateString();
 }
@@ -20,7 +20,7 @@ function renderAuthLinks(user) {
   if (user) {
     authDiv.innerHTML = `<span>Logged in as <b>${user.name}</b></span> <button id='logoutBtn'>Logout</button>`;
     document.getElementById('logoutBtn').onclick = async () => {
-      await fetch('/logout', {method: 'POST'});
+      await fetch('/logout', { method: 'POST' });
       document.cookie = 'session=; Max-Age=0; path=/;';
       location.reload();
     };
@@ -96,20 +96,88 @@ async function renderComments(postId) {
   const comments = await fetchComments(postId);
   commentsDiv.innerHTML = comments.map(c => `<div class="comment">${linkify(c.content)} <span style='color:#888;'>by <a href="/@${encodeURIComponent(c.author_name ? c.author_name : 'unknown')}">${c.author_name ? c.author_name : 'unknown'}</a>${c.created_at ? ' • ' + timeAgo(c.created_at) : ''}</span></div>`).join('');
 }
-document.getElementById('postForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const title = document.getElementById('title').value;
-  const content = document.getElementById('content').value;
-  await fetch('/posts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, content })
+
+// == Post Form ==
+const postForm = document.getElementById('postForm');
+if (postForm) {
+  postForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+    await fetch('/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, content })
+    });
+    document.getElementById('title').value = '';
+    document.getElementById('content').value = '';
+    renderFeed();
   });
-  document.getElementById('title').value = '';
-  document.getElementById('content').value = '';
-  renderFeed();
-});
+}
+
+
 fetchSession().then(user => {
   renderAuthLinks(user);
   renderFeed();
+});
+
+// == Signup Form ==
+document.addEventListener('DOMContentLoaded', () => {
+  const signupForm = document.getElementById('signupForm');
+  if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const errorDiv = document.getElementById('signupError');
+      errorDiv.textContent = '';
+      try {
+        const res = await fetch('/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          errorDiv.textContent = data.error || 'Signup failed';
+          return;
+        }
+        location.href = '/';
+      } catch (err) {
+        errorDiv.textContent = 'Network error';
+      }
+    });
+  }
+});
+
+// == Login Form ==
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorDiv = document.getElementById('loginError');
+
+      console.log('Login form submitted', { email, password });
+      errorDiv.textContent = '';
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          errorDiv.textContent = data.error || 'Login failed';
+          return;
+        }
+        location.href = '/';
+      } catch (err) {
+        errorDiv.textContent = 'Network error';
+      }
+    });
+  }
 });
