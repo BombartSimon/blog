@@ -297,6 +297,102 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"user": gin.H{"id": userID, "name": userName}})
 	})
 
+	// === Tags endpoints ===
+	// Add tag to post
+	router.POST("/posts/:id/tags", func(c *gin.Context) {
+		postID := c.Param("id")
+		var req struct {
+			Tag string `json:"tag"`
+		}
+		if err := c.BindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Authenticate user
+		_, exists := c.Get("user_id")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "login required"})
+			return
+		}
+
+		resp, err := postClient.TagPost(context.Background(), &postProto.TagPostRequest{
+			PostId: postID,
+			Tag:    req.Tag,
+		})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, resp)
+	})
+
+	// Remove tag from post
+	router.DELETE("/posts/:id/tags/:tag", func(c *gin.Context) {
+		postID := c.Param("id")
+		tag := c.Param("tag")
+
+		// Authenticate user
+		_, exists := c.Get("user_id")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "login required"})
+			return
+		}
+
+		resp, err := postClient.UntagPost(context.Background(), &postProto.UntagPostRequest{
+			PostId: postID,
+			Tag:    tag,
+		})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, resp)
+	})
+
+	// Get all tags (or tags for a specific post)
+	router.GET("/tags", func(c *gin.Context) {
+		postID := c.Query("post_id")
+
+		resp, err := postClient.ListTags(context.Background(), &postProto.ListTagsRequest{
+			PostId: postID,
+		})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, resp)
+	})
+
+	// Get posts by tag
+	router.GET("/posts/by-tag/:tag", func(c *gin.Context) {
+		tag := c.Param("tag")
+
+		// First get all posts
+		resp, err := postClient.List(context.Background(), &postProto.ListRequest{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Filter posts with the requested tag
+		var taggedPosts []*postProto.Post
+		for _, post := range resp.Posts {
+			for _, postTag := range post.Tags {
+				if postTag == tag {
+					taggedPosts = append(taggedPosts, post)
+					break
+				}
+			}
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"posts": taggedPosts,
+			"total": len(taggedPosts),
+			"tag":   tag,
+		})
+	})
+
 	// Serve all static files (css, js, etc.) from /static
 	router.Static("/static", "./static")
 

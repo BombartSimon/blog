@@ -10,7 +10,7 @@ A simple blog system using microservices architecture with go-micro v5.
 The project consists of the following microservices:
 
 1. **Users Service**: User management (create, read, update, delete)
-2. **Posts Service**: Post management (create, read, delete, list)
+2. **Posts Service**: Post management (create, read, delete, list, tag management)
 3. **Comments Service**: Comment management (create, read, delete, list)
 4. **Web Service**: REST API that uses all other services
 
@@ -28,6 +28,14 @@ You do not need to run a separate static file server. When you run the web servi
 Just start the web service as shown below, then open http://localhost:42096 in your browser to use the app.
 
 Authentication and profile features are available via the UI. The static UI interacts with the REST API provided by the web service.
+
+### Tag Features
+
+The blog allows you to:
+- Add tags to posts
+- Remove tags from posts
+- Filter the feed to show posts with a specific tag
+- Browse all available tags
 
 ## Getting Started
 
@@ -128,6 +136,19 @@ The REST API and web interface will be available at http://localhost:42096
   ```
 - `POST /logout`: Log out the current user
 - `GET /users/me`: Get the current session user info
+
+### Tags
+
+- `POST /posts/:id/tags`: Add a tag to a post
+  ```json
+  {
+    "tag": "tagname"
+  }
+  ```
+- `DELETE /posts/:id/tags/:tag`: Remove a tag from a post
+- `GET /tags`: Get all available tags
+- `GET /tags?post_id=:id`: Get tags for a specific post
+- `GET /posts/by-tag/:tag`: Get posts with a specific tag
 
 ## Project Structure
 

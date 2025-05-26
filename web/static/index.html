@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Micro Blog</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
   <div class="container">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <h1>Micro Blog</h1>
       <div id="auth-links"></div>
     </div>
+
+    <!-- Tag filter container - will be populated when filtering by tag -->
+    <div id="tag-filter-container"></div>
+
     <form id="postForm">
       <input type="text" id="title" placeholder="What's on your mind? (title)" required />
       <textarea id="content" placeholder="Write something..." required></textarea>
@@ -21,4 +27,5 @@
   </div>
   <script src="/static/main.js"></script>
 </body>
+
 </html>

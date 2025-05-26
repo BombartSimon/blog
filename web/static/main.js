@@ -181,3 +181,203 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+
+
+// == Tag functions ==
+async function fetchTags(postId = null) {
+  const url = postId ? `/tags?post_id=${postId}` : '/tags';
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.tags || [];
+}
+
+async function addTag(postId, tag) {
+  if (!tag || !postId) return null;
+
+  const res = await fetch(`/posts/${postId}/tags`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tag })
+  });
+
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+async function removeTag(postId, tag) {
+  if (!tag || !postId) return null;
+
+  const res = await fetch(`/posts/${postId}/tags/${encodeURIComponent(tag)}`, {
+    method: 'DELETE'
+  });
+
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+async function getPostsByTag(tag) {
+  if (!tag) return [];
+
+  const res = await fetch(`/posts/by-tag/${encodeURIComponent(tag)}`);
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  return data.posts || [];
+}
+
+// Render tags for a post
+async function renderTags(postId, container) {
+  const tags = await fetchTags(postId);
+  const tagsContainer = document.createElement('div');
+  tagsContainer.className = 'tags';
+
+  if (tags && tags.length > 0) {
+    tags.forEach(tag => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'tag';
+      tagEl.innerHTML = `<a href="/?tag=${encodeURIComponent(tag)}">${tag}</a>`;
+
+      // Add remove button if user is logged in
+      const session = fetchSession().then(user => {
+        if (user) {
+          const removeBtn = document.createElement('span');
+          removeBtn.className = 'remove';
+          removeBtn.textContent = '×';
+          removeBtn.addEventListener('click', async () => {
+            await removeTag(postId, tag);
+            renderTags(postId, container); // Re-render tags
+          });
+          tagEl.appendChild(removeBtn);
+        }
+      });
+
+      tagsContainer.appendChild(tagEl);
+    });
+  }
+
+  // Add form to add new tags (if user is logged in)
+  const session = await fetchSession();
+  if (session) {
+    const tagForm = document.createElement('form');
+    tagForm.className = 'tag-form';
+    tagForm.innerHTML = `
+      <input type="text" placeholder="Add tag..." />
+      <button type="submit">Add</button>
+    `;
+
+    tagForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = tagForm.querySelector('input');
+      const tag = input.value.trim();
+      if (tag) {
+        await addTag(postId, tag);
+        input.value = '';
+        renderTags(postId, container); // Re-render tags
+      }
+    });
+
+    tagsContainer.appendChild(tagForm);
+  }
+
+  // Clear and update container
+  container.innerHTML = '';
+  container.appendChild(tagsContainer);
+}
+
+// Modify renderFeed to include tags
+async function renderFeed() {
+  const feed = document.getElementById('feed');
+  feed.innerHTML = '';
+
+  // Check if filtering by tag
+  const urlParams = new URLSearchParams(window.location.search);
+  const filterTag = urlParams.get('tag');
+  let posts = [];
+
+  // Show tag filter UI if we're filtering
+  const tagFilterContainer = document.getElementById('tag-filter-container');
+  if (filterTag) {
+    tagFilterContainer.innerHTML = `
+      <div class="tag-filter">
+        <div>Showing posts tagged with: <span class="tag">${filterTag}</span></div>
+        <button id="clear-tag-filter">Clear Filter</button>
+      </div>
+    `;
+    document.getElementById('clear-tag-filter').addEventListener('click', () => {
+      window.location.href = '/';
+    });
+
+    // Fetch posts by tag
+    posts = await getPostsByTag(filterTag);
+  } else {
+    // Clear tag filter UI
+    tagFilterContainer.innerHTML = '';
+    // Regular post fetch
+    posts = await fetchPosts();
+  }
+
+  // Sort posts by created_at descending (reverse chronological)
+  posts.sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+
+  for (const post of posts) {
+    const postDiv = document.createElement('div');
+    postDiv.className = 'post';
+
+    // Link preview HTML (unchanged from your original code)
+    let linkPreviewHtml = '';
+    if (post.link_preview && post.link_preview.url) {
+      linkPreviewHtml = `
+        <div class="link-preview">
+          ${post.link_preview.image ? `<img src="${post.link_preview.image}" alt="preview image">` : ''}
+          <div>
+            <div>${post.link_preview.title || post.link_preview.url}</div>
+            <div>${post.link_preview.description || ''}</div>
+            <a href="${post.link_preview.url}" target="_blank">${post.link_preview.url}</a>
+          </div>
+        </div>
+      `;
+    }
+
+    postDiv.innerHTML = `
+      <div class="post-title">${post.title} <span style='font-size:0.9em;color:#888;'>by <a href="/@${encodeURIComponent(post.author_name ? post.author_name : 'unknown')}">${post.author_name ? post.author_name : 'unknown'}</a>${post.created_at ? ' • ' + timeAgo(post.created_at) : ''}</span></div>
+      <div class="post-content">${linkify(post.content)}</div>
+      ${linkPreviewHtml}
+      <div class="tags-container" id="tags-${post.id}"></div>
+      <div class="comments" id="comments-${post.id}"></div>
+      <form class="comment-form" data-post-id="${post.id}">
+        <input type="text" placeholder="Add a comment..." required />
+        <button type="submit">Comment</button>
+      </form>
+    `;
+
+    feed.appendChild(postDiv);
+
+    // Render tags for this post
+    renderTags(post.id, document.getElementById(`tags-${post.id}`));
+
+    // Render comments (unchanged from your original code)
+    renderComments(post.id);
+
+    // Add comment form event listener (unchanged from your original code)
+    postDiv.querySelector('.comment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const content = input.value;
+      await fetch('/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, post_id: post.id })
+      });
+      input.value = '';
+      renderComments(post.id);
+    });
+  }
+}
+
+// Update your document.ready code to check for tag parameter
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await fetchSession();
+  renderAuthLinks(user);
+  renderFeed();
+});
