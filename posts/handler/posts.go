@@ -118,3 +118,136 @@ func (h *Handler) List(ctx context.Context, req *pb.ListRequest, res *pb.ListRes
 	res.Total = 0
 	return nil
 }
+
+func (h *Handler) TagPost(ctx context.Context, req *pb.TagPostRequest, res *pb.TagPostResponse) error {
+	if req.PostId == "" || req.Tag == "" {
+		return nil
+	}
+
+	rec, err := postStore.Read("post-" + req.PostId)
+	if err != nil || len(rec) == 0 {
+		return nil
+	}
+
+	var post pb.Post
+	if err := json.Unmarshal(rec[0].Value, &post); err != nil {
+		return nil
+	}
+
+	// Initialize tags slice if it doesn't exist
+	if post.Tags == nil {
+		post.Tags = []string{}
+	}
+
+	// Check if tag already exists for this post
+	for _, tag := range post.Tags {
+		if tag == req.Tag {
+			// Tag already exists, return the post as is
+			res.Post = &post
+			return nil
+		}
+	}
+
+	// Add the new tag
+	post.Tags = append(post.Tags, req.Tag)
+	post.UpdatedAt = time.Now().Unix()
+
+	// Save the updated post
+	b, err := json.Marshal(&post)
+	if err == nil {
+		_ = postStore.Write(&store.Record{Key: "post-" + post.Id, Value: b})
+	}
+
+	res.Post = &post
+	return nil
+}
+
+func (h *Handler) UntagPost(ctx context.Context, req *pb.UntagPostRequest, res *pb.UntagPostResponse) error {
+	if req.PostId == "" || req.Tag == "" {
+		return nil
+	}
+
+	rec, err := postStore.Read("post-" + req.PostId)
+	if err != nil || len(rec) == 0 {
+		return nil
+	}
+
+	var post pb.Post
+	if err := json.Unmarshal(rec[0].Value, &post); err != nil {
+		return nil
+	}
+
+	if len(post.Tags) == 0 {
+		res.Post = &post
+		return nil
+	}
+
+	updatedTags := []string{}
+	for _, tag := range post.Tags {
+		if tag != req.Tag {
+			updatedTags = append(updatedTags, tag)
+		}
+	}
+
+	// Update the post only if tags were changed
+	if len(updatedTags) != len(post.Tags) {
+		post.Tags = updatedTags
+		post.UpdatedAt = time.Now().Unix()
+
+		// Save the updated post
+		b, err := json.Marshal(&post)
+		if err == nil {
+			_ = postStore.Write(&store.Record{Key: "post-" + post.Id, Value: b})
+		}
+	}
+
+	res.Post = &post
+	return nil
+}
+
+func (h *Handler) ListTags(ctx context.Context, req *pb.ListTagsRequest, res *pb.ListTagsResponse) error {
+	// If postId is specified, get tags for that specific post
+	if req.PostId != "" {
+		rec, err := postStore.Read("post-" + req.PostId)
+		if err != nil || len(rec) == 0 {
+			return nil
+		}
+
+		var post pb.Post
+		if err := json.Unmarshal(rec[0].Value, &post); err != nil {
+			return nil
+		}
+
+		res.Tags = post.Tags
+		return nil
+	}
+
+	// Otherwise, collect all unique tags across all posts
+	allTags := make(map[string]struct{})
+
+	rec, err := postStore.Read("post-", store.ReadPrefix())
+	if err != nil || len(rec) == 0 {
+		return nil
+	}
+
+	for _, r := range rec {
+		var post pb.Post
+		if err := json.Unmarshal(r.Value, &post); err == nil {
+			for _, tag := range post.Tags {
+				allTags[tag] = struct{}{}
+			}
+		}
+	}
+
+	// Convert map keys to slice
+	uniqueTags := make([]string, 0, len(allTags))
+	for tag := range allTags {
+		uniqueTags = append(uniqueTags, tag)
+	}
+
+	// Sort tags alphabetically for consistent output
+	sort.Strings(uniqueTags)
+
+	res.Tags = uniqueTags
+	return nil
+}

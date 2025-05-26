@@ -33,6 +33,10 @@ type PostsService interface {
 	Update(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 	List(ctx context.Context, in *ListRequest, opts ...client.CallOption) (*ListResponse, error)
+	// == Tags ==
+	TagPost(ctx context.Context, in *TagPostRequest, opts ...client.CallOption) (*TagPostResponse, error)
+	UntagPost(ctx context.Context, in *UntagPostRequest, opts ...client.CallOption) (*UntagPostResponse, error)
+	ListTags(ctx context.Context, in *ListTagsRequest, opts ...client.CallOption) (*ListTagsResponse, error)
 }
 
 type postsService struct {
@@ -97,6 +101,36 @@ func (c *postsService) List(ctx context.Context, in *ListRequest, opts ...client
 	return out, nil
 }
 
+func (c *postsService) TagPost(ctx context.Context, in *TagPostRequest, opts ...client.CallOption) (*TagPostResponse, error) {
+	req := c.c.NewRequest(c.name, "Posts.TagPost", in)
+	out := new(TagPostResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postsService) UntagPost(ctx context.Context, in *UntagPostRequest, opts ...client.CallOption) (*UntagPostResponse, error) {
+	req := c.c.NewRequest(c.name, "Posts.UntagPost", in)
+	out := new(UntagPostResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *postsService) ListTags(ctx context.Context, in *ListTagsRequest, opts ...client.CallOption) (*ListTagsResponse, error) {
+	req := c.c.NewRequest(c.name, "Posts.ListTags", in)
+	out := new(ListTagsResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Posts service
 
 type PostsHandler interface {
@@ -105,6 +139,10 @@ type PostsHandler interface {
 	Update(context.Context, *UpdateRequest, *UpdateResponse) error
 	Delete(context.Context, *DeleteRequest, *DeleteResponse) error
 	List(context.Context, *ListRequest, *ListResponse) error
+	// == Tags ==
+	TagPost(context.Context, *TagPostRequest, *TagPostResponse) error
+	UntagPost(context.Context, *UntagPostRequest, *UntagPostResponse) error
+	ListTags(context.Context, *ListTagsRequest, *ListTagsResponse) error
 }
 
 func RegisterPostsHandler(s server.Server, hdlr PostsHandler, opts ...server.HandlerOption) error {
@@ -114,6 +152,9 @@ func RegisterPostsHandler(s server.Server, hdlr PostsHandler, opts ...server.Han
 		Update(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
 		Delete(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
 		List(ctx context.Context, in *ListRequest, out *ListResponse) error
+		TagPost(ctx context.Context, in *TagPostRequest, out *TagPostResponse) error
+		UntagPost(ctx context.Context, in *UntagPostRequest, out *UntagPostResponse) error
+		ListTags(ctx context.Context, in *ListTagsRequest, out *ListTagsResponse) error
 	}
 	type Posts struct {
 		posts
@@ -144,4 +185,16 @@ func (h *postsHandler) Delete(ctx context.Context, in *DeleteRequest, out *Delet
 
 func (h *postsHandler) List(ctx context.Context, in *ListRequest, out *ListResponse) error {
 	return h.PostsHandler.List(ctx, in, out)
+}
+
+func (h *postsHandler) TagPost(ctx context.Context, in *TagPostRequest, out *TagPostResponse) error {
+	return h.PostsHandler.TagPost(ctx, in, out)
+}
+
+func (h *postsHandler) UntagPost(ctx context.Context, in *UntagPostRequest, out *UntagPostResponse) error {
+	return h.PostsHandler.UntagPost(ctx, in, out)
+}
+
+func (h *postsHandler) ListTags(ctx context.Context, in *ListTagsRequest, out *ListTagsResponse) error {
+	return h.PostsHandler.ListTags(ctx, in, out)
 }

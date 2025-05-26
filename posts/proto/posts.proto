@@ -10,6 +10,11 @@ service Posts {
     rpc Update(UpdateRequest) returns (UpdateResponse) {};
     rpc Delete(DeleteRequest) returns (DeleteResponse) {};
     rpc List(ListRequest) returns (ListResponse) {};
+
+    // == Tags ==
+    rpc TagPost(TagPostRequest) returns (TagPostResponse) {};
+    rpc UntagPost(UntagPostRequest) returns (UntagPostResponse) {};
+    rpc ListTags(ListTagsRequest) returns (ListTagsResponse) {};
 }
 
 message LinkPreview {
@@ -28,6 +33,7 @@ message Post {
     int64 created_at = 6;
     int64 updated_at = 7;
     LinkPreview link_preview = 8;
+    repeated string tags = 9;
 }
 
 message CreateRequest {
@@ -74,4 +80,28 @@ message ListResponse {
     repeated Post posts = 1;
     int32 total = 2;
     string message = 3;
+}
+
+message TagPostRequest {
+    string post_id = 1;
+    string tag = 2;
+}
+
+message TagPostResponse {
+    Post post = 1;
+}
+
+message UntagPostRequest {
+    string post_id = 1;
+    string tag = 2;
+}
+message UntagPostResponse {
+    Post post = 1;
+}
+message ListTagsRequest {
+    string post_id = 1;
+}
+message ListTagsResponse {
+    repeated string tags = 1;
+    string message = 2;
 }
