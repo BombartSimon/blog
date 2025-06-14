@@ -8,25 +8,91 @@ image: "./cursor-vs-copilot.png"
 draft: false
 ---
 
-# ⚔️ Cursor vs Copilot: An Honest Take from a Dev
+<div style={{
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  color: "white",
+  padding: "3rem 2rem",
+  borderRadius: "1.5rem",
+  marginBottom: "3rem",
+  textAlign: "center",
+  position: "relative",
+  overflow: "hidden"
+}}>
+  <div style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "url('data:image/svg+xml,<svg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" fill-rule=\"evenodd\"><g fill=\"%23ffffff\" fill-opacity=\"0.1\"><circle cx=\"30\" cy=\"30\" r=\"2\"/></g></svg>')",
+    opacity: 0.3
+  }} />
+  <div style={{ position: "relative", zIndex: 1 }}>
+    <h1 style={{ fontSize: "2.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
+      ⚔️ Cursor vs Copilot: An Honest Take from a Dev
+    </h1>
+    <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>
+      After one year of Copilot and a few days testing Cursor, here's my real experience
+    </p>
+  </div>
+</div>
 
 As a backend developer passionate about clean systems and developer experience, I've spent **over a year with GitHub Copilot** in my day-to-day workflows. Whether building REST APIs in Go, navigating Kubernetes manifests, or tweaking SQL queries, Copilot has been a near-constant companion — quietly assisting, suggesting, and occasionally blowing my mind.
 
-But recently, I decided to try **Cursor**, the new AI-powered code editor everyone’s buzzing about. After just a few days, I’ve got thoughts.
+But recently, I decided to try **Cursor**, the new AI-powered code editor everyone's buzzing about. After just a few days, I've got thoughts.
 
 ---
 
 ## 🧰 The Tools: What They Aim to Do
 
-**GitHub Copilot**  
-> A code completion assistant powered by OpenAI, Copilot plugs into your favorite IDE (VSCode, Neovim, JetBrains…) and helps suggest code snippets, functions, comments, tests — almost like pair programming with an AI that doesn’t sleep.
+<div style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+  gap: "2rem",
+  marginBottom: "2rem"
+}}>
 
-**Cursor**  
-> A full-fledged code editor (a fork of VSCode) enhanced by native AI integration. Cursor takes things further by embedding AI *everywhere* — inline edits, commit messages, file explanations, and even multi-file refactoring flows. It’s like Copilot… but with the whole IDE tailored for AI.
+<div style={{
+  padding: "2rem",
+  background: "linear-gradient(135deg, rgba(36, 41, 46, 0.05) 0%, rgba(36, 41, 46, 0.1) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(36, 41, 46, 0.2)",
+  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+}}>
+
+### **GitHub Copilot** 🤖
+
+A code completion assistant powered by OpenAI, Copilot plugs into your favorite IDE (VSCode, Neovim, JetBrains…) and helps suggest code snippets, functions, comments, tests — almost like pair programming with an AI that doesn't sleep.
+
+</div>
+
+<div style={{
+  padding: "2rem",
+  background: "linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(147, 51, 234, 0.2)",
+  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+}}>
+
+### **Cursor** ✨
+
+A full-fledged code editor (a fork of VSCode) enhanced by native AI integration. Cursor takes things further by embedding AI *everywhere* — inline edits, commit messages, file explanations, and even multi-file refactoring flows. It's like Copilot… but with the whole IDE tailored for AI.
+
+</div>
+
+</div>
 
 ---
 
 ## 💭 My Perspective
+
+<div style={{
+  padding: "2rem",
+  background: "linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(101, 163, 13, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(16, 185, 129, 0.2)",
+  marginBottom: "2rem"
+}}>
 
 I'm a **big fan of Copilot** — it changed the way I write code. The experience feels fluid and familiar, like the editor is finishing my thoughts.
 
@@ -34,56 +100,162 @@ That said, I was genuinely curious to try Cursor. Everyone in the dev community 
 
 And to be honest: **Cursor is impressive.**
 
+</div>
+
 ---
 
 ## 🔍 What Cursor Does *Really* Well
 
-- **Navigation between files is exceptional**  
-  Seriously. Jumping from one part of your codebase to another with AI-powered context is just *better* in Cursor.  
-  Whether it's understanding a class, finding the next edit location, or getting a summary of a function — it’s built-in, fast, and intuitive.
+<div style={{
+  display: "grid",
+  gap: "1.5rem",
+  marginBottom: "2rem"
+}}>
 
-- **Multi-step commands feel native**  
-  Want to refactor a whole file? Ask Cursor. Need to understand the difference between two functions? Ask Cursor. It feels more like giving orders to an assistant who knows your codebase inside out.
+<div style={{
+  padding: "1.5rem",
+  background: "linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(34, 197, 94, 0.2)",
+  borderLeft: "4px solid rgba(34, 197, 94, 0.5)"
+}}>
 
-- **Copilot is playing catch-up**  
-  GitHub is introducing features like “Next Suggested Edit” — which is cool, but let’s be real: **Cursor nailed that already**.
+### 🚀 **Navigation between files is exceptional**
+Seriously. Jumping from one part of your codebase to another with AI-powered context is just *better* in Cursor. Whether it's understanding a class, finding the next edit location, or getting a summary of a function — it's built-in, fast, and intuitive.
+
+</div>
+
+<div style={{
+  padding: "1.5rem",
+  background: "linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(168, 85, 247, 0.2)",
+  borderLeft: "4px solid rgba(168, 85, 247, 0.5)"
+}}>
+
+### ⚙️ **Multi-step commands feel native**
+Want to refactor a whole file? Ask Cursor. Need to understand the difference between two functions? Ask Cursor. It feels more like giving orders to an assistant who knows your codebase inside out.
+
+</div>
+
+<div style={{
+  padding: "1.5rem",
+  background: "linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, rgba(251, 146, 60, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(244, 63, 94, 0.2)",
+  borderLeft: "4px solid rgba(244, 63, 94, 0.5)"
+}}>
+
+### 🏃‍♂️ **Copilot is playing catch-up**
+GitHub is introducing features like "Next Suggested Edit" — which is cool, but let's be real: **Cursor nailed that already**.
+
+</div>
+
+</div>
 
 ---
 
 ## 💸 Pricing & Value
 
+<div style={{
+  padding: "2rem",
+  background: "linear-gradient(135deg, rgba(251, 146, 60, 0.05) 0%, rgba(244, 63, 94, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(251, 146, 60, 0.2)",
+  marginBottom: "2rem"
+}}>
+
 Here's where the scales tip.
 
-- **Cursor’s pricing** is quite a bit steeper than Copilot’s.
-- For devs like me who already get a ton of value from Copilot — it’s hard to justify the switch *purely* on price/performance ratio.
-- If you’re on a budget or already happy with Copilot in your current stack, **the difference probably isn’t worth it** yet.
+- **Cursor's pricing** is quite a bit steeper than Copilot's.
+- For devs like me who already get a ton of value from Copilot — it's hard to justify the switch *purely* on price/performance ratio.
+- If you're on a budget or already happy with Copilot in your current stack, **the difference probably isn't worth it** yet.
+
+</div>
 
 ---
 
 ## 🏁 My Verdict
 
-> I loved using Cursor.  
-> I’ll probably go back to it from time to time.  
-> But for now — **I’m sticking with Copilot**.
+<div style={{
+  padding: "2.5rem",
+  background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)",
+  borderRadius: "1.5rem",
+  border: "2px solid rgba(99, 102, 241, 0.3)",
+  textAlign: "center",
+  marginBottom: "3rem",
+  position: "relative"
+}}>
 
-Copilot still integrates beautifully into my workflow, and with new features being rolled out regularly, I think it’ll continue improving fast. Cursor shows what’s possible — but for now, Copilot remains the best balance of **cost, speed, and support** in my dev toolbox.
+<div style={{
+  fontSize: "1.5rem",
+  fontWeight: "bold",
+  marginBottom: "1.5rem",
+  color: "rgba(99, 102, 241, 1)"
+}}>
+  🏆 The Final Word
+</div>
+
+<div style={{ fontSize: "1.1rem", lineHeight: "1.7" }}>
+  I loved using Cursor.<br />
+  I'll probably go back to it from time to time.<br />
+  But for now — **I'm sticking with Copilot**.
+</div>
+
+<div style={{
+  marginTop: "1.5rem",
+  padding: "1rem",
+  background: "rgba(255, 255, 255, 0.1)",
+  borderRadius: "0.5rem",
+  fontSize: "0.95rem"
+}}>
+  Copilot still integrates beautifully into my workflow, and with new features being rolled out regularly, I think it'll continue improving fast. Cursor shows what's possible — but for now, Copilot remains the best balance of **cost, speed, and support** in my dev toolbox.
+</div>
+
+</div>
 
 ---
 
-> 🧠 Curious to hear your take. Are you team Cursor or Copilot?
+## 💬 Let's Discuss
 
-DM me on [Twitter](https://twitter.com/BombartSimon), [GitHub](https://github.com/BombartSimon), or connect on [LinkedIn](https://www.linkedin.com/in/simonbombart/).
+<div style={{
+  padding: "2rem",
+  background: "linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)",
+  borderRadius: "1rem",
+  border: "1px solid rgba(6, 182, 212, 0.2)",
+  textAlign: "center",
+  marginBottom: "2rem"
+}}>
+
+🧠 **Curious to hear your take. Are you team Cursor or Copilot?**
+
+<div style={{
+  display: "flex",
+  gap: "1rem",
+  justifyContent: "center",
+  marginTop: "1.5rem",
+  flexWrap: "wrap"
+}}>
+
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/BombartSimon)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BombartSimon)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/simonbombart/)
+
+</div>
+
+</div>
 
 ---
 
 <div style={{
-  padding: "1.5rem",
-  marginTop: "2rem",
+  padding: "2rem",
+  marginTop: "3rem",
   background: "linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05))",
-  borderRadius: "1rem",
+  borderRadius: "1.5rem",
   border: "1px solid rgba(147, 51, 234, 0.2)",
   fontStyle: "italic",
-  textAlign: "center"
+  textAlign: "center",
+  fontSize: "1.1rem"
 }}>
   _"Both tools are game-changers. Use the one that makes you feel like a wizard."_ 🧙‍♂️
 </div>
