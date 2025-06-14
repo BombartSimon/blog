@@ -281,7 +281,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-Built with &hearts; by [enscribe](https://enscribe.dev)!
+Built with &hearts; by [Bombart Simon](https://bombart-simon.vercel.app)!
 
 [Stargazers]: https://img.shields.io/github/stars/jktrn/astro-erudite?color=fafafa&logo=github&logoColor=fff&style=for-the-badge
 [License]: https://img.shields.io/github/license/jktrn/astro-erudite?color=0a0a0a&logo=github&logoColor=fff&style=for-the-badge

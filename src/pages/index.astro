@@ -13,55 +13,43 @@ const blog = await getRecentPosts(SITE.featuredPostCount)
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="Home" />
   <section>
-    <div class="rounded-lg border">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <!-- <h3 class="text-3xl leading-none font-medium">er·u·dite</h3> -->
-        <h3 class="text-3xl leading-none font-medium">si·mon</h3>
-        <!-- <p class="text-muted-foreground text-sm">
-          /ˈer(y)əˌdīt/ &bull; <span class="font-medium">adjective</span>
-        </p> -->
-        <p class="text-muted-foreground text-sm">
-          /ˈsiːmən/ &bull; <span class="font-medium">noun</span>
+    <div
+      class="from-background via-background/95 to-muted/20 relative overflow-hidden rounded-xl border bg-gradient-to-br shadow-lg backdrop-blur-sm"
+    >
+      <div class="bg-grid-pattern absolute inset-0 opacity-5"></div>
+      <div class="relative flex flex-col space-y-3 p-8">
+        <div class="flex items-center gap-2">
+          <h3
+            class="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-4xl leading-none font-bold text-transparent"
+          >
+            si·mon
+          </h3>
+          <div class="bg-primary h-2 w-2 animate-pulse rounded-full"></div>
+        </div>
+        <p class="text-muted-foreground font-mono text-sm">
+          /ˈsiːmən/ &bull; <span class="text-primary font-medium">noun</span>
         </p>
-      </div>
-      <div class="p-6 pt-0">
-        <p class="text-muted-foreground mb-2 text-sm">
-          bombart-simon is an opinionated, unstyled static blogging template
-          built with <Link
-            href="https://astro.build"
-            class="text-foreground"
-            external
-            underline>Astro</Link
-          >, <Link
-            href="https://tailwindcss.com"
-            class="text-foreground"
-            external
-            underline>Tailwind</Link
-          >, and <Link
-            href="https://ui.shadcn.com"
-            class="text-foreground"
-            external
-            underline>shadcn/ui</Link
-          >. Extraordinarily loosely based on the <Link
-            href="https://astro-micro.vercel.app/"
-            class="text-foreground"
-            external
-            underline>Astro Micro</Link
-          > theme.
+        <div
+          class="via-border h-px bg-gradient-to-r from-transparent to-transparent"
+        >
+        </div>
+        <p class="text-muted-foreground text-sm leading-relaxed">
+          From the Hebrew Shim'on – meaning <span
+            class="text-foreground font-medium">"the one who listens."</span
+          >
+          <br />
+          In code: the one who listens to systems, deciphers complexity, and answers
+          with structured, scalable solutions. Also known to assemble ideas like
+          LEGO bricks, and wield his Go-lightsaber against spaghetti code.
         </p>
-        <!-- <p class="text-muted-foreground text-sm">
-          To use this template, check out the <Link
-            href="https://github.com/jktrn/astro-erudite"
-            class="text-foreground"
-            underline
-            external>GitHub</Link
-          > repository. To learn more about why this template exists, read this blog
-          post: <Link
-            href="/blog/the-state-of-static-blogs"
-            class="text-foreground"
-            underline>The State of Static Blogs in 2024</Link
-          >.
-        </p> -->
+        <div class="flex items-center gap-2 pt-2">
+          <div class="flex gap-1">
+            <div class="bg-primary/60 h-1 w-8 rounded"></div>
+            <div class="bg-primary/40 h-1 w-4 rounded"></div>
+            <div class="bg-primary/20 h-1 w-2 rounded"></div>
+          </div>
+          <span class="text-muted-foreground/60 text-xs">Go Developer</span>
+        </div>
       </div>
     </div>
   </section>
