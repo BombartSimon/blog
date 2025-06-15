@@ -1,0 +1,35 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import { Search as SearchComponent } from '@/components/ui/search'
+import Layout from '@/layouts/Layout.astro'
+import { getAllPosts, getPopularTags } from '@/lib/data-utils'
+
+const allPosts = await getAllPosts()
+const popularTags = await getPopularTags(8)
+---
+
+<Layout class="max-w-3xl">
+    <PageHead slot="head" title="Search Blog Posts" />
+    <Breadcrumbs
+        items={[
+            { label: 'Blog', href: '/blog', icon: 'lucide:library-big' },
+            { label: 'Search', icon: 'lucide:search' },
+        ]}
+    />
+
+    <div class="space-y-8">
+        <div>
+            <h1 class="mb-2 text-3xl font-bold">Search Blog Posts</h1>
+            <p class="text-muted-foreground">
+                Find posts by title, content, tags, or authors
+            </p>
+        </div>
+
+        <SearchComponent
+            allPosts={allPosts}
+            popularTags={popularTags}
+            client:load
+        />
+    </div>
+</Layout>

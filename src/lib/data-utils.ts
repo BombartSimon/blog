@@ -163,7 +163,7 @@ export function groupPostsByYear(
   return posts.reduce(
     (acc: Record<string, CollectionEntry<'blog'>[]>, post) => {
       const year = post.data.date.getFullYear().toString()
-      ;(acc[year] ??= []).push(post)
+        ; (acc[year] ??= []).push(post)
       return acc
     },
     {},
@@ -301,4 +301,59 @@ export async function getTOCSections(postId: string): Promise<TOCSection[]> {
   }
 
   return sections
+}
+
+export type SearchablePost = {
+  id: string
+  title: string
+  description: string
+  content: string
+  tags: string[]
+  authors: string[]
+  date: Date
+  entry: CollectionEntry<'blog'>
+}
+
+export async function searchPosts(query: string): Promise<CollectionEntry<'blog'>[]> {
+  if (!query.trim()) {
+    return []
+  }
+
+  const allPosts = await getAllPosts()
+  const searchablePosts = await Promise.all(
+    allPosts.map(async (post) => {
+      const contentText = post.body // Use the markdown content directly
+
+      return {
+        id: post.id,
+        title: post.data.title,
+        description: post.data.description,
+        content: contentText,
+        tags: post.data.tags || [],
+        authors: post.data.authors || [],
+        date: post.data.date,
+        entry: post,
+      } as SearchablePost
+    })
+  )
+
+  const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0)
+
+  return searchablePosts
+    .filter((post) => {
+      return searchTerms.every(term =>
+        post.title.toLowerCase().includes(term) ||
+        post.description.toLowerCase().includes(term) ||
+        post.content.toLowerCase().includes(term) ||
+        post.tags.some(tag => tag.toLowerCase().includes(term)) ||
+        post.authors.some(author => author.toLowerCase().includes(term))
+      )
+    })
+    .map(post => post.entry)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+}
+
+export async function getPopularTags(limit: number = 10): Promise<string[]> {
+  const sortedTags = await getSortedTags()
+  return sortedTags.slice(0, limit).map(tag => tag.tag)
 }
