@@ -8,6 +8,7 @@ interface SearchWithPreviewProps {
     placeholder?: string
     maxPreviewResults?: number
     onResultClick?: (post: CollectionEntry<'blog'>) => void
+    isMobile?: boolean
 }
 
 function PreviewPostCard({ post, onClick }: {
@@ -22,18 +23,39 @@ function PreviewPostCard({ post, onClick }: {
         })
     }
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
         if (onClick) {
             onClick()
-        } else {
-            window.location.href = `/blog/${post.id}`
         }
+
+        // Force navigation
+        window.location.href = `/blog/${post.id}`
+    }
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (onClick) {
+            onClick()
+        }
+
+        // Force navigation for touch events
+        window.location.href = `/blog/${post.id}`
     }
 
     return (
-        <div
-            className="p-3 hover:bg-accent/50 cursor-pointer border-b last:border-b-0 transition-colors"
+        <a
+            href={`/blog/${post.id}`}
+            className="mobile-search-item block p-4 hover:bg-accent/50 cursor-pointer border-b last:border-b-0 transition-colors touch-manipulation text-inherit no-underline"
             onClick={handleClick}
+            onTouchEnd={handleTouchEnd}
+            role="button"
+            tabIndex={0}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
         >
             <div className="flex flex-col space-y-1">
                 <div className="flex items-center justify-between">
@@ -58,7 +80,7 @@ function PreviewPostCard({ post, onClick }: {
                     </div>
                 )}
             </div>
-        </div>
+        </a>
     )
 }
 
@@ -66,7 +88,8 @@ export function SearchWithPreview({
     allPosts,
     placeholder = "Search posts...",
     maxPreviewResults = 5,
-    onResultClick
+    onResultClick,
+    isMobile = false
 }: SearchWithPreviewProps) {
     const [query, setQuery] = useState('')
     const [isOpen, setIsOpen] = useState(false)
@@ -190,6 +213,61 @@ export function SearchWithPreview({
 
     const showViewAll = query.trim().length > 0 && searchResults.length >= maxPreviewResults
 
+    // Mobile rendering - show results directly without dropdown
+    if (isMobile) {
+        return (
+            <div className="flex flex-col h-full">
+                <Input
+                    ref={inputRef}
+                    type="text"
+                    placeholder={placeholder}
+                    value={query}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleFocus}
+                    className="w-full"
+                    autoFocus
+                />
+
+                {query.trim() && (
+                    <div className="flex-1 overflow-y-auto mt-4">
+                        {searchResults.length > 0 ? (
+                            <div className="space-y-1">
+                                {searchResults.map((post, index) => (
+                                    <div
+                                        key={post.id}
+                                        className={`rounded-md ${selectedIndex === index ? 'bg-accent/50' : ''}`}
+                                    >
+                                        <PreviewPostCard
+                                            post={post}
+                                            onClick={() => handleResultClick(post)}
+                                        />
+                                    </div>
+                                ))}
+
+                                {showViewAll && (
+                                    <div
+                                        className="p-3 border-t bg-muted/30 hover:bg-muted/50 cursor-pointer text-center text-sm text-muted-foreground transition-colors rounded-md mt-2"
+                                        onClick={() => {
+                                            window.location.href = `/blog/search?q=${encodeURIComponent(query)}`
+                                        }}
+                                    >
+                                        View all results for "{query}"
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                                No posts found for "{query}"
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    // Desktop rendering - dropdown style
     return (
         <div ref={searchRef} className="relative w-full">
             <Input
