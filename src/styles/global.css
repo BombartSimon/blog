@@ -135,4 +135,23 @@
     -webkit-line-clamp: 3;
     line-clamp: 3;
   }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-search-item {
+    min-height: 60px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .mobile-search-item:active {
+    background-color: var(--accent);
+    transform: scale(0.98);
+    transition: all 0.1s ease;
+  }
 }
