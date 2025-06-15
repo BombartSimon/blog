@@ -2,9 +2,14 @@
 import Link from '@/components/Link.astro'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 import MobileMenu from '@/components/ui/mobile-menu'
+import { MobileSearch } from '@/components/ui/mobile-search'
+import { SearchWithPreview } from '@/components/ui/search-with-preview'
 import { NAV_LINKS, SITE } from '@/consts'
+import { getAllPosts } from '@/lib/data-utils'
 import { Image } from 'astro:assets'
 import logo from '../../public/static/logo.png'
+
+const allPosts = await getAllPosts()
 ---
 
 <header transition:persist>
@@ -20,7 +25,20 @@ import logo from '../../public/static/logo.png'
         >{SITE.title}</span
       >
     </Link>
-    <div class="flex items-center sm:gap-4">
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Search - hidden on mobile -->
+      <div class="hidden w-48 sm:block lg:w-64">
+        <SearchWithPreview
+          allPosts={allPosts}
+          placeholder="Search..."
+          maxPreviewResults={4}
+          client:load
+        />
+      </div>
+
+      <!-- Mobile search button -->
+      <MobileSearch allPosts={allPosts} client:load />
+
       <nav class="hidden items-center gap-4 text-sm sm:flex sm:gap-6">
         {
           NAV_LINKS.map((item) => (
