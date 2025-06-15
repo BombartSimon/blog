@@ -25,15 +25,25 @@ export function MobileSearch({ allPosts }: MobileSearchProps) {
             </Button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm sm:hidden">
-                    <div className="fixed top-0 left-0 right-0 p-4 bg-background border-b">
-                        <div className="flex items-center gap-2">
+                <div
+                    className="fixed inset-0 z-[9999] bg-background sm:hidden"
+                    onClick={(e) => {
+                        // Only close if clicking the backdrop, not the content
+                        if (e.target === e.currentTarget) {
+                            setIsOpen(false)
+                        }
+                    }}
+                >
+                    <div className="flex flex-col h-full">
+                        {/* Header with search and close */}
+                        <div className="flex items-center gap-2 p-4 border-b bg-background relative z-10">
                             <div className="flex-1">
                                 <SearchWithPreview
                                     allPosts={allPosts}
                                     placeholder="Search posts..."
-                                    maxPreviewResults={6}
+                                    maxPreviewResults={10}
                                     onResultClick={() => setIsOpen(false)}
+                                    isMobile={true}
                                 />
                             </div>
                             <Button
@@ -41,6 +51,7 @@ export function MobileSearch({ allPosts }: MobileSearchProps) {
                                 size="icon"
                                 onClick={() => setIsOpen(false)}
                                 aria-label="Close search"
+                                className="shrink-0"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
