@@ -1,9 +1,8 @@
 ---
-name: 'Project A'
-description: 'This is an example project description! You should replace this with a description of your own project.'
-tags: ['Framework A', 'Library B', 'Tool C', 'Resource D']
-image: '../../../public/static/1200x630.png'
-link: 'https://example.com'
-startDate: '2024-01-01'
-endDate: '2024-02-01'
+name: 'MissingBrick'
+description: 'MissingBrick is a small Go-based project that helps you track LEGO sets and the parts you are missing for each set. It uses the Rebrickable API to fetch set and part details and stores data locally in a SQLite database. The backend exposes a simple REST API you can use from a frontend, Bruno API client, or any HTTP tool.'
+tags: ['Golang', 'React', 'Rebrickable', 'Lego']
+image: '../../../public/static/missing_brick.png'
+link: 'https://github.com/BombartSimon/MissingBrick'
+startDate: '2025-08-06'
 ---
